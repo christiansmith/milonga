@@ -6,6 +6,15 @@ Milonga is a helper for defining a set of RESTful Express routes based on [Modin
 
     $ npm install milonga
 
+In an Express app, just require Milonga and register your model at a base path:
+
+    require('milonga')(app)
+    app.resource('/api/v1/widgets', Widget);
+
+
+Now we have a set of routes for Widget.
+
+
 ## The MIT License
 
 Copyright (c) 2013 Christian Smith http://anvil.io
