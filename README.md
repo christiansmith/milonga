@@ -14,6 +14,11 @@ In an Express app, just require Milonga and register your model at a base path:
 
 Now we have a set of routes for Widget.
 
+Optionally, add route specific middleware as the last argument to `app.resource()`.
+
+    var middleware = passport.authenticate('basic', { session: false });
+    app.resource('/api/v1/sprockets', Sprocket, middleware);
+
 
 ## The MIT License
 
