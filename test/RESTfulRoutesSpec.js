@@ -22,9 +22,10 @@ chai.should();
  */
 
 var express = require('express')
+  , passport = require('passport')
+  , BasicStrategy = require('passport-http').BasicStrategy
   , Model = require('modinha')
   , app = express()
-  , foo = require('../index')(app)  
   ;
 
 
@@ -39,6 +40,8 @@ var Resource = Model.extend(null, {
 app.configure(function () {
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+  app.use(passport.initialize());
+  app.use(passport.session());  
   app.use(app.router);
   app.use(function (err, req, res, next) {
     console.log(err)
@@ -46,8 +49,18 @@ app.configure(function () {
   });
 });
 
+passport.use('basic', new BasicStrategy(function (username, password, done) {
+  if (username !== 'foo' || password !== 'bar') {
+    done(null, false);
+  } else {
+    next(null, {});
+  }
+}));
+
+require('../index')(app);
 
 app.resource('/resources', Resource);
+app.resource('/private', Resource, passport.authenticate('basic', { session: false }))
 
 
 /**
@@ -182,6 +195,31 @@ describe('RESTful Resource', function () {
 
     it('should destroy the resource resource', function () {
       Resource.backend.documents.length.should.equal(0);
+    });
+
+  });
+
+
+  describe('with middleware', function () {
+
+    before(function (done) {
+      Resource.backend.reset();
+      request(app)
+        .post('/private')
+        .send({ name: 'New' })
+        .end(function (error, response) {
+          err = error;
+          res = response;
+          done();
+        });
+    });
+
+    it('should respond 401', function () {
+      res.statusCode.should.equal(401);
+    });
+
+    it('should respond "Unauthorized"', function () {
+      res.text.should.equal('Unauthorized');
     });
 
   });

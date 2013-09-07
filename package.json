@@ -21,7 +21,9 @@
     "grunt-release": "~0.5.1",
     "supertest": "~0.7.1",
     "express": "~3.3.8",
-    "modinha": "~0.0.3"
+    "modinha": "~0.0.3",
+    "passport-http": "~0.2.2",
+    "passport": "~0.1.17"
   },
   "dependencies": {},
   "bugs": {
