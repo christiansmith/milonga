@@ -4,6 +4,15 @@ module.exports = function (app) {
 
     if (!middleware) { middleware = []; }
 
+
+    app.get(path, middleware, function (req, res, next) {
+      model.find({}, function (err, instances) {
+        if (err) { return next(err); }
+        res.json(instances);        
+      });
+    });
+
+
     app.get(path + '/:id', middleware, function (req, res, next) {
       model.find({ _id: req.params.id }, function (err, instance) {
         if (err) { return next(err); }

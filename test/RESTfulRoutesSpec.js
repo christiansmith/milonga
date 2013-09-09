@@ -82,6 +82,28 @@ describe('RESTful Resource', function () {
 
   describe('GET /resources', function () {
 
+    before(function (done) {
+      request(app)
+        .get('/resources')
+        .end(function (error, response) {
+          err = error;
+          res = response;
+          done();
+        });
+    });
+
+    it('should respond 200', function () {
+      res.statusCode.should.equal(200);
+    });
+
+    it('should respond with JSON', function () {
+      res.headers['content-type'].should.contain('application/json');
+    });
+
+    it('should respond with an array of resources', function () {
+      res.body[0].name.should.equal('Whatever');
+    });
+
   });
 
 
